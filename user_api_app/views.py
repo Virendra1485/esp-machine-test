@@ -12,10 +12,54 @@ from .models import User
 
 
 class UserRegistrationAPIView(CreateAPIView):
+    """
+       API endpoint for user registration.
+
+       POST:
+       Register a new user using the provided data.
+
+       Payload:
+       {
+           "name": "string, required",
+           "email": "string, required",
+           "password": "string, required",
+           "phone": "string, required",
+           "address": "string, required",
+       }
+
+       Returns:
+       - If successful, returns serialized user data.
+       - If unsuccessful due to invalid data, returns detailed error messages.
+
+       Status Codes:
+       - 201 Created: User registered successfully.
+       - 400 Bad Request: Invalid data provided.
+    """
     serializer_class = UserRegistrationSerializer
 
 
 class TokenGenerationAPIView(APIView):
+    """
+        API endpoint for generating access tokens.
+
+        POST:
+        Generate an access token using the provided phone number and password.
+
+        Payload:
+        {
+            "phone": "string, required",
+            "password": "string, required"
+        }
+
+        Returns:
+        - If successful and credentials are valid, returns token, API key, and secret key.
+        - If unsuccessful due to invalid credentials or data, returns error messages.
+
+        Status Codes:
+        - 200 OK: Token generated successfully.
+        - 400 Bad Request: Invalid data provided.
+        - 401 Unauthorized: Invalid credentials.
+    """
     serializer_class = TokenRequestSerializer
 
     def post(self, request):
@@ -39,6 +83,31 @@ class TokenGenerationAPIView(APIView):
 
 
 class UserUpdateAPIView(UpdateAPIView):
+    """
+        API endpoint for updating user information.
+
+        PUT:
+        Update user information for the authenticated user.
+
+        Authorization:
+        Include the access token in the Authorization header as 'Bearer <access_token>'.
+
+        Payload:
+        {
+            "name": "string required",
+            "email": "string required",
+            "address": "string required"
+        }
+
+        Returns:
+        - If successful, returns updated user data.
+        - If unsuccessful due to invalid data or missing/invalid token, returns error messages.
+
+        Status Codes:
+        - 200 OK: User updated successfully.
+        - 400 Bad Request: Invalid data provided.
+        - 401 Unauthorized: Invalid or missing token.
+        """
     queryset = User.objects.all()
     serializer_class = UserUpdateSerializer
     permission_classes = [IsAuthenticated]
@@ -76,6 +145,23 @@ class UserUpdateAPIView(UpdateAPIView):
 
 
 class DeleteUserView(APIView):
+    """
+        API endpoint for deleting a user account.
+
+        DELETE:
+        Delete the authenticated user's account.
+
+        Authorization:
+        Include the access token in the Authorization header as 'Bearer <access_token>'.
+
+        Returns:
+        - If successful, returns a success message.
+        - If unsuccessful due to authentication failure or other errors, returns error messages.
+
+        Status Codes:
+        - 204 No Content: User deleted successfully.
+        - 401 Unauthorized: Invalid or missing token.
+    """
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 

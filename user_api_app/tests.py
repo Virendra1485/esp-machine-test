@@ -74,7 +74,8 @@ class UserUpdateAPIViewTest(APITestCase):
 class TokenGenerationAPIViewTest(APITestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.user = get_user_model().objects.create_user(phone='7418529632', password='Test@123', name="abc", address="indore", email="abc@gmail.com")
+        self.user = get_user_model().objects.create_user(phone='7418529632', password='Test@123', name="abc",
+                                                         address="indore", email="abc@gmail.com")
 
     def test_token_generation_success(self):
         url = reverse('user-sign-in')
